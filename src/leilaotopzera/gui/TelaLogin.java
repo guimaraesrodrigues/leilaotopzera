@@ -5,7 +5,7 @@
  */
 package leilaotopzera.gui;
 
-import leilaotopzera.Processo;
+import leilao.Processo;
 
 /**
  *

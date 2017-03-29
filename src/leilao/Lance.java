@@ -1,5 +1,5 @@
 
-package leilaotopzera;
+package leilao;
 
 public class Lance {
 

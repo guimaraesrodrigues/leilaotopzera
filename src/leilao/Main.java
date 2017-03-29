@@ -1,4 +1,4 @@
-package leilaotopzera;
+package leilao;
 
 import leilaotopzera.gui.TelaLogin;
 import leilaotopzera.pn.MulticastPeer;
