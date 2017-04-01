@@ -2,7 +2,7 @@ package leilao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import leilaotopzera.pn.MulticastPeer;
+import leilao.pn.MulticastPeer;
         
 public class Processo implements Serializable{
     private int id_usuario;

@@ -1,4 +1,4 @@
-package leilaotopzera.pn;
+package leilao.pn;
 
 import leilao.Processo;
 import java.net.*;
@@ -31,24 +31,24 @@ public class MulticastPeer extends Thread {
             this.socket = new MulticastSocket(6789);
             this.socket.joinGroup(group);
             DatagramPacket messageOut;
-            socket.setTimeToLive(5);
+            //socket.setTimeToLive(5);
             this.p = new PeerReceive(this.socket, this.sessao); // Iniciando thread do receive (socket como parâmetro) ...
 
             Scanner scan = new Scanner(System.in);
-            String message;
-            message = "Multicast iniciado na porta 6789";
-            messageOut = new DatagramPacket(message.getBytes(), message.length(), this.group, 6789);
+            byte[] message = new byte[1000];
+            message = "Multicast iniciado na porta 6789!".getBytes();
+            messageOut = new DatagramPacket(message, message.length, this.group, 6789);
             this.socket.send(messageOut);
             
             while (!message.equals("sair")) { // Enquanto não digitar 'sair' fica no loop ...
 
-                message = scan.nextLine();
-                messageOut = new DatagramPacket(message.getBytes(), message.length(), this.group, 6789);
+                message = scan.nextLine().getBytes();
+                messageOut = new DatagramPacket(message, message.length, this.group, 6789);
 
-                socket.send(messageOut);
+                socket.send(messageOut);                
             }
-
-            this.socket.leaveGroup(this.group);
+            
+            this.socket.leaveGroup(this.group);            
 
         } catch (SocketException e) {
 
@@ -67,12 +67,12 @@ public class MulticastPeer extends Thread {
     }
 
     /*Método que enviará mensagens pela rede p2p*/
-    public void enviaMensagem(String message) {
+    public void enviaMensagem(byte[] message) {
 
         try {
             DatagramPacket messageOut;
 
-            messageOut = new DatagramPacket(message.getBytes(), message.length(), this.group, 6789);
+            messageOut = new DatagramPacket(message, message.length, this.group, 6789);
 
             this.socket.send(messageOut);//com o socket já instanciado, envamos o datagrampacket    
 
@@ -100,21 +100,21 @@ class PeerReceive extends Thread {
     public void run() {
 
         try {
+            byte[] message = new byte[1000];            
             while (true) { // Loop para ficar recebendo mensagens ...
 
                 byte[] buffer = new byte[1000];
-                DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length);
-                String message;
+                DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length);                
 
                 s.receive(messageIn);
-                message = new String(messageIn.getData());
-
-                if (message.codePointAt(0) == '0') {
-                    mensagem_novoUser(message);
+                message = messageIn.getData();
+                System.out.println(""+ new String(message));
+                if (message[0] == '0') {
+                    //mensagem_novoUser(message);
                 }
-                else if (message.codePointAt(0) == '~'){
+                else if (message[0] == '~'){
                     //sessao.limpaLista_usuarios();
-                    mensagem_novoBD(message);
+                    //mensagem_novoBD(message);
                 }
             }
         } catch (IOException ex) {

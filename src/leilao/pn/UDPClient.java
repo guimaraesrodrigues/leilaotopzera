@@ -1,4 +1,4 @@
-package leilaotopzera.pn;
+package leilao.pn;
 
 import java.net.*;
 import java.io.*;
@@ -6,11 +6,11 @@ import java.io.*;
 public class UDPClient {
 
     DatagramSocket aSocket;
-    String mensagem;
+    byte[] mensagem;
     String ip_addr;
     int porta;    
     
-    public UDPClient(String mensagem, String ip_addr, int porta) {
+    public UDPClient(byte[] mensagem, String ip_addr, int porta) {
         this.mensagem = mensagem;
         this.ip_addr = ip_addr;
         this.porta = porta;
@@ -20,11 +20,10 @@ public class UDPClient {
     public void enviaMensagem(){
         try {
             aSocket = new DatagramSocket();
-            byte[] m = mensagem.getBytes();
             InetAddress aHost = InetAddress.getByName(ip_addr);
             int serverPort = porta;
             DatagramPacket request
-                    = new DatagramPacket(m, mensagem.length(), aHost, serverPort);
+                    = new DatagramPacket(mensagem, mensagem.length, aHost, serverPort);
             aSocket.send(request);
             byte[] buffer = new byte[4096];
             DatagramPacket reply = new DatagramPacket(buffer, buffer.length);

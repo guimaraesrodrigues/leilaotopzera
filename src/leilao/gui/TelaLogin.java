@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package leilaotopzera.gui;
+package leilao.gui;
 
 import leilao.Processo;
 
-/**
- *
- * @author a1609580
- */
 public class TelaLogin extends javax.swing.JFrame {
 
     private Processo processo;
