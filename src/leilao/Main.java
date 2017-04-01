@@ -1,7 +1,7 @@
 package leilao;
 
-import leilaotopzera.gui.TelaLogin;
-import leilaotopzera.pn.MulticastPeer;
+import leilao.gui.TelaLogin;
+import leilao.pn.MulticastPeer;
 
 public class Main {
     public static void main(String[] args) {

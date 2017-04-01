@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package leilaotopzera.pn;
+package leilao.pn;
 
 import leilao.Processo;
 import java.net.*;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * Classe que cria um servidor UDP. Herda de Thread pois é um servidor que fica
  * em constante operação esperando que clientes requisitem alguma transação de
- * bitcoins, por exemplo*
+ * leilão, por exemplo*
  */
 public class UDPServer extends Thread {
 
@@ -43,12 +43,12 @@ public class UDPServer extends Thread {
                 DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(),
                         request.getAddress(), request.getPort());
                
-                String message = new String(request.getData());
-
-//                if (message.codePointAt(0) == '~') {
+                byte[] message = new byte[1000];
+                message = request.getData();
+                if (message[0] == '~') {
 //                    sessao.limpaLista_usuarios();
 //                    separaMensagem(message);
-//                }
+                }
                 aSocket.send(reply);
             }
         } catch (SocketException e) {

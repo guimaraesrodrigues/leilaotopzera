@@ -1,4 +1,3 @@
-
 package leilao;
 
 public class Lance {
