@@ -16,6 +16,7 @@ public class Criptografia {
 
     public Criptografia(Processo processo) {
         this.processo = processo;
+        this.geraChave();
     }
 
     public void geraChave() {
@@ -33,6 +34,7 @@ public class Criptografia {
             this.chavePrivada = key.getPrivate();            
                      
             processo.setChave_publica(key.getPublic().getEncoded());
+            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,9 +59,9 @@ public class Criptografia {
     }
 
     /**
-     * Decriptografa o texto puro usando chave privada.
+     * Descriptografa o texto puro usando chave privada.
      */
-    public static String decriptografa(byte[] texto, PrivateKey chave) {
+    public static String descriptografa(byte[] texto, PrivateKey chave) {
 
         byte[] dectyptedText = null;
         try {
@@ -110,7 +112,7 @@ public class Criptografia {
             byte[] textoCriptografado = criptografa(msgOriginal, chavePublica);
 
             // Decriptografa a Mensagem usando a Chave Pirvada
-            String textoPuro = decriptografa(textoCriptografado, chavePrivada);
+            String textoPuro = descriptografa(textoCriptografado, chavePrivada);
 
         } catch (Exception e) {
             e.printStackTrace();

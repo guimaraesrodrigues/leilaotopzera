@@ -3,7 +3,9 @@ package leilao.pn;
 import leilao.Processo;
 import java.net.*;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -13,12 +15,12 @@ public class MulticastPeer extends Thread {
     private InetAddress group;//ip para o grupo multicast
     private MulticastSocket socket; // O mesmo socket para send e receive ...   
     private PeerReceive p;
-    private Processo sessao;
+    private Processo processo;
 
-    public MulticastPeer(Processo s) {
+    public MulticastPeer(Processo p) {
 
         this.socket = null;
-        this.sessao = s;
+        this.processo = p;
         Properties props = System.getProperties();
         props.setProperty("java.net.preferIPv4Stack","true");
         System.setProperties(props);
@@ -32,13 +34,17 @@ public class MulticastPeer extends Thread {
             this.socket.joinGroup(group);
             DatagramPacket messageOut;
             //socket.setTimeToLive(5);
-            this.p = new PeerReceive(this.socket, this.sessao); // Iniciando thread do receive (socket como parâmetro) ...
-
-            Scanner scan = new Scanner(System.in);
+            this.p = new PeerReceive(this.socket, this.processo); // Iniciando thread do receive (socket como parâmetro) ...
             byte[] message = new byte[1000];
-            message = "Multicast iniciado na porta 6789!".getBytes();
-            messageOut = new DatagramPacket(message, message.length, this.group, 6789);
-            this.socket.send(messageOut);
+            
+            
+            /*TODO: Remover a entrada de dados pelo console */
+            Scanner scan = new Scanner(System.in);//um scanner para entrada de dados no console            
+            
+            /*Enviamos uma mensagem teste apenas para ter certeza que o processo entrou na rede*/
+            //message = "Multicast iniciado na porta 6789!".getBytes();
+            //messageOut = new DatagramPacket(message, message.length, this.group, 6789);
+            //this.socket.send(messageOut);
             
             while (!message.equals("sair")) { // Enquanto não digitar 'sair' fica no loop ...
 
@@ -88,11 +94,11 @@ public class MulticastPeer extends Thread {
 class PeerReceive extends Thread {
 
     private final MulticastSocket s;
-    private Processo sessao;
+    private Processo processo;
 
-    public PeerReceive(MulticastSocket s, Processo sessao) {
+    public PeerReceive(MulticastSocket s, Processo processo) {
 
-        this.sessao = sessao;
+        this.processo = processo;
         this.s = s;
         this.start(); // Inicia thread ...
     }
@@ -100,17 +106,22 @@ class PeerReceive extends Thread {
     public void run() {
 
         try {
-            byte[] message = new byte[1000];            
+            byte[] message;            
             while (true) { // Loop para ficar recebendo mensagens ...
 
                 byte[] buffer = new byte[1000];
-                DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length);                
-
+                DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length); 
+                
+    
                 s.receive(messageIn);
-                message = messageIn.getData();
-                System.out.println(""+ new String(message));
+                message = messageIn.getData();                
+                
+                //impressao da mensagem apenas para debug
+                //for (int i = 0; i < message.length; i++)
+                //    System.out.print(message[i]);
+                
                 if (message[0] == '0') {
-                    //mensagem_novoUser(message);
+                    mensagem_novoUser(message);
                 }
                 else if (message[0] == '~'){
                     //sessao.limpaLista_usuarios();
@@ -122,27 +133,52 @@ class PeerReceive extends Thread {
         }
     }
     
-    private void mensagem_novoUser(String m) {
-        String nome = null;
-        float moedas = 0, preco = 0;
-        int porta = 0, versao_bd;
-        byte[] chave_pub;
+    
+    private void mensagem_novoUser(byte[] m) {
+                
+        int posicao_nome = 0, posicao_porta = 0, posicao_chave = 0;
+        int i;   
         
-        String[] lista_dados = m.split("\\|");  
+               
+        for (i = 2; i < m.length; i++ ){
+            if(m[i] == '|'){
+                posicao_porta = i;
+                break;
+            }
+        }
+        for (i = posicao_porta+1; i < m.length; i++){
+             if(m[i] == '|'){
+                posicao_nome = i;
+                break;
+            }
+        }
+        for (i = posicao_nome+1; i < m.length; i++ ){
+            if(m[i] == '|')
+                posicao_chave = i;
+        }
         
-        nome = lista_dados[1];        
-        moedas = Float.parseFloat(lista_dados[2]);                
-        preco = Float.parseFloat(lista_dados[3]);      
-        porta = Integer.parseUnsignedInt(lista_dados[4].trim());
+        //System.out.println("mensagem: " + new String(m));
         
-        chave_pub = new byte[lista_dados[5].trim().length()];
-        chave_pub = (lista_dados[5].getBytes());      
+        byte[] porta = new byte[posicao_porta-2];
+        byte[] nome = new byte[posicao_nome-posicao_porta];        
+        byte[] chave_pub = new byte[posicao_chave-posicao_nome];
         
-        System.out.println("");
-//        if (porta != sessao.getPortaUDP()) {
-//            sessao.adicionaUsuario(nome, moedas, preco, porta, 5);
-//            new UDPClient(sessao.lista_usuariosToString(), "localhost", porta);
-//        }
+        porta = Arrays.copyOfRange(m, 2, posicao_porta);
+        nome = Arrays.copyOfRange(m, posicao_porta+1, posicao_nome);
+        chave_pub = Arrays.copyOfRange(m, posicao_nome+1, posicao_chave);       
+        
+        //System.out.println("porta: "+ new String(porta));
+        //System.out.println("nome: "+ new String(nome));
+        //for (i = 0; i < chave_pub.length; i++){
+         //   System.out.print(chave_pub[i]);
+        //}
+        
+        int porta_novo_usuario = new Integer(new String(porta));
+        
+        if (porta_novo_usuario != this.processo.getPorta_usuario()) {
+            processo.adicionaUsuario(porta_novo_usuario, new String(nome), chave_pub);
+            // UDPClient(processo.lista_usuariosTobyte(), "localhost", porta_novo_usuario);
+        }
     }
     
     private void mensagem_novoBD(String m) {
