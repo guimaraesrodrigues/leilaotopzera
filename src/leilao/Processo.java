@@ -41,7 +41,7 @@ public class Processo implements Serializable{
             
             //Primeiro colocamos os dados do processo no vetor lista_usuarios e
             //em seguida inserimos a chave publica no vetor lista_usuarios
-            System.arraycopy(dados_processo.getBytes(), 0, lista_usuarios, tamanho_lista, lista_usuarios.length);
+            System.arraycopy(dados_processo.getBytes(), 0, lista_usuarios, tamanho_lista, dados_processo.getBytes().length);
             System.arraycopy(chave_pub, 0, lista_usuarios, tamanho_lista+dados_processo.length() , chave_pub.length);
             
             tamanho_lista+=dados_processo.getBytes().length + chave_pub.length;
@@ -90,5 +90,9 @@ public class Processo implements Serializable{
 
     public void setUsuarios(ArrayList<Processo> usuarios) {
         this.usuarios = usuarios;
+    }
+    
+    public void limpaBD(){
+        this.usuarios = null;
     }
 }

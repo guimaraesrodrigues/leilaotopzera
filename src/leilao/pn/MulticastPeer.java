@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MulticastPeer extends Thread {
 
@@ -139,7 +141,7 @@ class PeerReceive extends Thread {
         int posicao_nome = 0, posicao_porta = 0, posicao_chave = 0;
         int i;   
         
-               
+        //Primeiramente encontramos a posição de cada dado no vetor da mensagem      
         for (i = 2; i < m.length; i++ ){
             if(m[i] == '|'){
                 posicao_porta = i;
@@ -155,29 +157,33 @@ class PeerReceive extends Thread {
         for (i = posicao_nome+1; i < m.length; i++ ){
             if(m[i] == '|')
                 posicao_chave = i;
-        }
+        }        
         
-        //System.out.println("mensagem: " + new String(m));
-        
+        //inicializamos vetores de byte para cada dado com seus respectivos tamanhos
         byte[] porta = new byte[posicao_porta-2];
         byte[] nome = new byte[posicao_nome-posicao_porta];        
         byte[] chave_pub = new byte[posicao_chave-posicao_nome];
         
+        //copiamos cada um dos dados do vetor de origem 'm' para seus respectivos
+        //vetores
         porta = Arrays.copyOfRange(m, 2, posicao_porta);
         nome = Arrays.copyOfRange(m, posicao_porta+1, posicao_nome);
         chave_pub = Arrays.copyOfRange(m, posicao_nome+1, posicao_chave);       
         
-        //System.out.println("porta: "+ new String(porta));
-        //System.out.println("nome: "+ new String(nome));
-        //for (i = 0; i < chave_pub.length; i++){
-         //   System.out.print(chave_pub[i]);
-        //}
-        
+                
         int porta_novo_usuario = new Integer(new String(porta));
+        
         
         if (porta_novo_usuario != this.processo.getPorta_usuario()) {
             processo.adicionaUsuario(porta_novo_usuario, new String(nome), chave_pub);
-            // UDPClient(processo.lista_usuariosTobyte(), "localhost", porta_novo_usuario);
+            
+            try {
+                this.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(PeerReceive.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            new UDPClient(processo.lista_usuariosTobyte(), "localhost", porta_novo_usuario);
         }
     }
     
