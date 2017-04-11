@@ -3,18 +3,19 @@ import java.util.ArrayList;
 
 
 public class Produto {
-    private int codigo;
+    private String codigo;
     private String nome;
     private String descricao;
-    private float precoin;
-    private float tempofinal;
+    private float valor;
+    private Float tempofinal;
+    private boolean ativo;
     private ArrayList<Lance> lances;
-
-    public int getCodigo() {
+    
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
@@ -34,12 +35,12 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public float getPrecoin() {
-        return precoin;
+    public float getValor() {
+        return valor;
     }
 
-    public void setPrecoin(float precoin) {
-        this.precoin = precoin;
+    public void setValor(float precoin) {
+        this.valor = precoin;
     }
 
     public float getTempofinal() {
@@ -48,5 +49,13 @@ public class Produto {
 
     public void setTempofinal(float tempofinal) {
         this.tempofinal = tempofinal;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

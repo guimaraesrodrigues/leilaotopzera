@@ -9,13 +9,20 @@ public class Processo implements Serializable{
     private String nome_usuario;
     private byte[] chave_publica;
     private ArrayList<Produto> lista_produtos;
-    private ArrayList<Processo> usuarios;
+    private ArrayList<Processo> lista_usuarios;
     public MulticastPeer conexao_multi;
+    private int contador_produtos;
+
+   
+    
+    public Processo() {
+        this.contador_produtos = 0;
+    }
 
     public void adicionaUsuario(int porta, String nome, byte[]chave){
         
-        if(usuarios == null)
-            usuarios = new ArrayList<Processo>();
+        if(lista_usuarios == null)
+            lista_usuarios = new ArrayList<Processo>();
         
         Processo novo_usuario = new Processo();
         
@@ -23,7 +30,31 @@ public class Processo implements Serializable{
         novo_usuario.setNome_usuario(nome);
         novo_usuario.setChave_publica(chave);
         
-        this.usuarios.add(novo_usuario);
+        this.lista_usuarios.add(novo_usuario);
+    }
+    
+    public void adicionaProduto(Produto p){
+        if(lista_produtos == null)
+            lista_produtos = new ArrayList<Produto>();
+        lista_produtos.add(p);
+        contador_produtos++;
+        conexao_multi.enviaMensagem(produtoToByte(contador_produtos-1));
+    }
+    
+    public void adicionaProdutoUsuario(Produto prod, int porta){
+        for (Processo p : this.lista_usuarios){
+            if (p.getPorta_usuario() == porta){
+                if(p.lista_produtos == null)                    
+                    p.lista_produtos = new ArrayList<Produto>();
+                p.lista_produtos.add(prod);
+            }
+        }
+    }
+    
+    public byte[] produtoToByte(int indice){
+        Produto p = this.lista_produtos.get(indice);
+        String dados_produto = new String("1"+p.getNome()+"|"+p.getCodigo()+"|"+p.getDescricao()+"|"+p.getValor()+"|"+p.getTempofinal()+"|");
+        return dados_produto.getBytes();
     }
     
     /*Método que transforma o banco de dados em um vetor de bytes*/
@@ -31,7 +62,7 @@ public class Processo implements Serializable{
         byte[] lista_usuarios = new byte[4096];
         int tamanho_lista = 0;
                 
-        for(Processo p : this.usuarios){
+        for(Processo p : this.lista_usuarios){
             String dados_processo = new String("~" + p.getPorta_usuario() + "|" + p.getNome_usuario()+ "|");
             byte[] chave_pub = new byte[p.getChave_publica().length+"|".getBytes().length];
             
@@ -84,15 +115,19 @@ public class Processo implements Serializable{
         this.lista_produtos = lista_produtos;
     }
 
-    public ArrayList<Processo> getUsuarios() {
-        return usuarios;
+    public ArrayList<Processo> getLista_usuarios() {
+        return lista_usuarios;
     }
 
-    public void setUsuarios(ArrayList<Processo> usuarios) {
-        this.usuarios = usuarios;
+    public void setLista_usuarios(ArrayList<Processo> lista_usuarios) {
+        this.lista_usuarios = lista_usuarios;
     }
     
     public void limpaBD(){
-        this.usuarios = null;
+        this.lista_usuarios = null;
+    }
+    
+    public int getContador_produtos() {
+        return contador_produtos;
     }
 }

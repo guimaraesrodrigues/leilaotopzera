@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import leilao.Produto;
 
 public class MulticastPeer extends Thread {
 
@@ -129,6 +130,9 @@ class PeerReceive extends Thread {
                     //sessao.limpaLista_usuarios();
                     //mensagem_novoBD(message);
                 }
+                else if (message[0] == '1'){
+                    mensagem_novoProduto(message);
+                }
             }
         } catch (IOException ex) {
             System.out.println("Erro: "+ex.toString());
@@ -187,27 +191,71 @@ class PeerReceive extends Thread {
         }
     }
     
-    private void mensagem_novoBD(String m) {
-
-        String nome = null;
-        float moedas = 0, preco = 0;
-        int porta = 0, versao_bd;
-
-        StringTokenizer st = new StringTokenizer(m, "~");        
-        String[] lista_dados;        
-        String s = new String();
+    private void mensagem_novoProduto(byte[] m){
+               
+        int p_nome = 0, p_cod = 0, p_desc = 0, p_valor = 0, p_time = 0;
+        int i;   
         
-        while (st.hasMoreElements()) {
-            s = st.nextToken();            
-            lista_dados = s.split("\\|");
-            
-            nome = lista_dados[0];
-            moedas = Float.parseFloat(lista_dados[1]);
-            preco = Float.parseFloat(lista_dados[2]);
-            porta = Integer.parseUnsignedInt(lista_dados[3].trim());           
-            versao_bd = Integer.parseUnsignedInt(lista_dados[4].trim());
-            
-//            sessao.adicionaUsuario(nome, moedas, preco, porta, versao_bd);
+        //Primeiramente encontramos a posição de cada dado no vetor da mensagem      
+        for (i = 1; i < m.length; i++ ){
+            if(m[i] == '|'){
+                p_nome = i;
+                break;
+            }
         }
-    }
+        for (i = p_nome+1; i < m.length; i++){
+             if(m[i] == '|'){
+                p_cod = i;
+                break;
+            }
+        }
+        for (i = p_cod+1; i < m.length; i++ ){
+            if(m[i] == '|'){
+                p_desc = i;
+                break;
+            }
+        }
+        for (i = p_desc+1; i < m.length; i++ ){
+            if(m[i] == '|'){
+                p_valor = i;
+                break;
+            }
+        }
+        for (i = p_valor+1; i < m.length; i++ ){
+            if(m[i] == '|'){
+                p_time = i;
+                break;
+            }
+        }
+        //System.out.println("Nome: "+p_nome+" Cod: "+p_cod+" Desc: "+p_desc+" Valor: "+p_valor+" Tempo: "+p_time);
+        byte[] bnome = new byte[p_nome-1];
+        //System.out.println(bnome.length);
+        byte[] bcod = new byte[p_cod - p_nome];
+        //System.out.println(bcod.length);
+        byte[] bdesc = new byte[p_desc - p_cod];
+        //System.out.println(bdesc.length);
+        byte[] bvalor = new byte[p_valor - p_desc];
+        //System.out.println(bvalor.length);
+        byte[] btime = new byte[p_time - p_valor];
+        //System.out.println(btime.length);
+        
+        bnome = Arrays.copyOfRange(m, 1, p_nome);
+        bcod = Arrays.copyOfRange(m, p_nome+1, p_cod);
+        bdesc = Arrays.copyOfRange(m, p_cod+1, p_desc);
+        bvalor = Arrays.copyOfRange(m, p_desc+1, p_valor);
+        btime = Arrays.copyOfRange(m, p_valor+1, p_time);        
+        
+        int porta = Integer.parseInt(new String(Arrays.copyOfRange(m, p_nome+1, p_cod-1)));
+        Produto novoP = new Produto();
+        
+        if(porta != this.processo.getPorta_usuario()){           
+            novoP.setCodigo(new String(bcod));
+            novoP.setNome(new String (bnome));
+            novoP.setDescricao(new String(bdesc));
+            novoP.setValor(Float.parseFloat(new String(bvalor)));
+            novoP.setTempofinal(Float.parseFloat(new String(btime)));
+            this.processo.adicionaProdutoUsuario(novoP, porta);
+            System.out.println("Porta " + porta);         
+        }               
+    }    
 }

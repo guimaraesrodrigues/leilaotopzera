@@ -1,5 +1,7 @@
 package leilao.gui;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
@@ -12,6 +14,8 @@ public class TelaLogin extends javax.swing.JFrame {
     
     public TelaLogin(Processo processo) {
         initComponents();
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         this.setVisible(true);
         this.processo = processo;
     }
@@ -35,6 +39,9 @@ public class TelaLogin extends javax.swing.JFrame {
         imprime_lista = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Tela Login");
+        setAlwaysOnTop(true);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jPanel1.setMinimumSize(new java.awt.Dimension(400, 259));
 
@@ -175,10 +182,12 @@ public class TelaLogin extends javax.swing.JFrame {
        
         processo.conexao_multi.enviaMensagem(mensagem_anuncio);
         
+        TelaPrincipal tp = new TelaPrincipal(processo);
+        this.setVisible(false);
     }//GEN-LAST:event_botaoOKActionPerformed
 
     private void imprime_listaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprime_listaActionPerformed
-        for(Processo p : this.processo.getUsuarios()){
+        for(Processo p : this.processo.getLista_usuarios()){
             System.out.println("Porta: "+p.getPorta_usuario());
             System.out.println("Nome: "+p.getNome_usuario());
         }
