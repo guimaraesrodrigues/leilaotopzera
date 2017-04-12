@@ -130,7 +130,7 @@ class PeerReceive extends Thread {
                     //sessao.limpaLista_usuarios();
                     //mensagem_novoBD(message);
                 }
-                else if (message[0] == '1'){
+                else if (message[0] == '1'){                    
                     mensagem_novoProduto(message);
                 }
             }
@@ -176,18 +176,15 @@ class PeerReceive extends Thread {
         
                 
         int porta_novo_usuario = new Integer(new String(porta));
-        
-        
+                
         if (porta_novo_usuario != this.processo.getPorta_usuario()) {
-            processo.adicionaUsuario(porta_novo_usuario, new String(nome), chave_pub);
             
-            try {
-                this.sleep(1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(PeerReceive.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+            processo.adicionaUsuario(porta_novo_usuario, new String(nome), chave_pub);         
+            //enviamos a lista de usuarios para o novo processo da rede
             new UDPClient(processo.lista_usuariosTobyte(), "localhost", porta_novo_usuario);
+            if(!processo.getLista_produtos().isEmpty())
+                new UDPClient(processo.lista_produtosToByte(), "localhost", porta_novo_usuario);
+            
         }
     }
     
@@ -243,19 +240,21 @@ class PeerReceive extends Thread {
         bcod = Arrays.copyOfRange(m, p_nome+1, p_cod);
         bdesc = Arrays.copyOfRange(m, p_cod+1, p_desc);
         bvalor = Arrays.copyOfRange(m, p_desc+1, p_valor);
-        btime = Arrays.copyOfRange(m, p_valor+1, p_time);        
+        btime = Arrays.copyOfRange(m, p_valor+1, p_time);
         
         int porta = Integer.parseInt(new String(Arrays.copyOfRange(m, p_nome+1, p_cod-1)));
         Produto novoP = new Produto();
         
-        if(porta != this.processo.getPorta_usuario()){           
+        if(porta != this.processo.getPorta_usuario()){         
             novoP.setCodigo(new String(bcod));
             novoP.setNome(new String (bnome));
             novoP.setDescricao(new String(bdesc));
             novoP.setValor(Float.parseFloat(new String(bvalor)));
             novoP.setTempofinal(Float.parseFloat(new String(btime)));
-            this.processo.adicionaProdutoUsuario(novoP, porta);
-            System.out.println("Porta " + porta);         
-        }               
+            this.processo.adicionaProdutoRecebido(novoP);            
+        }     
+        
+        //processo.AddLeilaoRecebido(novoP);
+               
     }    
 }

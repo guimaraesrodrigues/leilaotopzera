@@ -47,6 +47,9 @@ public class UDPServer extends Thread {
                     separaNovoBD(message);
                     bd_new = false;
                 }
+                if (message[0] == '&') {
+                    
+                }
                 aSocket.send(reply);
             }
         } catch (SocketException e) {
@@ -96,16 +99,8 @@ o método Processo.adicionaUsuário para a criação de novo usuário e inserç�
             
             p = Arrays.copyOfRange(m, j, posicao_porta+1);
             n = Arrays.copyOfRange(m, posicao_porta+2, posicao_nome+1);
-            c = Arrays.copyOfRange(m, posicao_nome+2, posicao_chave+1);
-            
-            
-            System.out.println(new Integer(new String(p)));
-            for(int k = 0; k<n.length ; k++)
-                System.out.print((char)n[k]);
-            System.out.println("");
-            for(int k = 0; k<c.length ; k++)
-                System.out.print(c[k]);
-            System.out.println("");
+            c = Arrays.copyOfRange(m, posicao_nome+2, posicao_chave+1);  
+     
             processo.adicionaUsuario(new Integer(new String(p)),new String(n),c);
         }
     }

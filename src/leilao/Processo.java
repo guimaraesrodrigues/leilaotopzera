@@ -2,7 +2,10 @@ package leilao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import leilao.gui.TelaLance;
+import leilao.gui.TelaPrincipal;
 import leilao.pn.MulticastPeer;
+import leilao.pn.UDPClient;
         
 public class Processo implements Serializable{
     private int porta_usuario;
@@ -12,13 +15,20 @@ public class Processo implements Serializable{
     private ArrayList<Processo> lista_usuarios;
     public MulticastPeer conexao_multi;
     private int contador_produtos;
-
-   
+    public TelaPrincipal tp;   
     
     public Processo() {
         this.contador_produtos = 0;
     }
-
+    
+    public void InstanciaTelaPrincial(){
+        tp = new TelaPrincipal(this);
+    }
+    
+    public void AddLeilaoRecebido(Produto p){
+        tp.addListaUltimosLeiloes("COD: "+ p.getCodigo()+" Produto: "+p.getNome()+" Desc.: "+p.getDescricao()+" R$: "+ p.getValor());
+    }
+    
     public void adicionaUsuario(int porta, String nome, byte[]chave){
         
         if(lista_usuarios == null)
@@ -30,31 +40,39 @@ public class Processo implements Serializable{
         novo_usuario.setNome_usuario(nome);
         novo_usuario.setChave_publica(chave);
         
-        this.lista_usuarios.add(novo_usuario);
+        this.lista_usuarios.add(novo_usuario);       
+        
     }
     
-    public void adicionaProduto(Produto p){
+    public void adicionaNovoProduto(Produto p){
         if(lista_produtos == null)
             lista_produtos = new ArrayList<Produto>();
         lista_produtos.add(p);
-        contador_produtos++;
-        conexao_multi.enviaMensagem(produtoToByte(contador_produtos-1));
+        contador_produtos++;        
     }
     
-    public void adicionaProdutoUsuario(Produto prod, int porta){
-        for (Processo p : this.lista_usuarios){
-            if (p.getPorta_usuario() == porta){
-                if(p.lista_produtos == null)                    
-                    p.lista_produtos = new ArrayList<Produto>();
-                p.lista_produtos.add(prod);
-            }
-        }
-    }
+    public void adicionaProdutoRecebido(Produto prod){              
+        if(this.lista_produtos == null)                    
+            this.lista_produtos = new ArrayList<Produto>();
+        this.lista_produtos.add(prod);
+                 
+    }  
     
-    public byte[] produtoToByte(int indice){
-        Produto p = this.lista_produtos.get(indice);
-        String dados_produto = new String("1"+p.getNome()+"|"+p.getCodigo()+"|"+p.getDescricao()+"|"+p.getValor()+"|"+p.getTempofinal()+"|");
-        return dados_produto.getBytes();
+    public byte[] lista_produtosToByte(){
+        byte[] lista_produtos = new byte[4096];
+                
+         String dados_produtos = new String();
+         
+        for(Produto p : this.lista_produtos){
+            
+            dados_produtos = dados_produtos.concat(new String("&" +p.getNome()+"|"+p.getCodigo()+"|"
+                    +p.getDescricao()+"|"+p.getValor()+"|"+p.getTempofinal()));                 
+        }                
+        
+        dados_produtos = dados_produtos.concat("|");
+        
+        System.out.println(""+dados_produtos);
+        return lista_produtos;
     }
     
     /*Método que transforma o banco de dados em um vetor de bytes*/
@@ -76,8 +94,7 @@ public class Processo implements Serializable{
             System.arraycopy(chave_pub, 0, lista_usuarios, tamanho_lista+dados_processo.length() , chave_pub.length);
             
             tamanho_lista+=dados_processo.getBytes().length + chave_pub.length;
-        }        
-        
+        }                
         return lista_usuarios;
     }
     
