@@ -23,11 +23,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
      */
     private Processo processo;
     DefaultListModel listaTodosLeiloes = new DefaultListModel();
+    DefaultListModel listaMLeiloes = new DefaultListModel();
     
     public TelaPrincipal(Processo processo) {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         initComponents();
+        usuario.setText("Usuário: "+processo.getNome_usuario());
         this.setVisible(true);
         this.processo = processo;
     }
@@ -55,9 +57,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         listarButton = new javax.swing.JButton();
         buttonProdutos = new javax.swing.JButton();
+        usuario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(720, 480));
 
         titulo.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         titulo.setText("Leilão TOPzera!");
@@ -109,6 +111,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        usuario.setText("USUARIO");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,39 +120,44 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tituloUltimosLeiloes)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jButton1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(TituloMeusLeiloes)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tituloUltimosLeiloes)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(jButton1)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TituloMeusLeiloes)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(botaoNovoProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(13, 13, 13)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tituloMeusLances)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(listarButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(buttonProdutos))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(titulo)
                         .addGap(18, 18, 18)
-                        .addComponent(botaoNovoProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(13, 13, 13)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tituloMeusLances)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(listarButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(buttonProdutos)))
+                        .addComponent(usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(titulo)
-                .addGap(228, 228, 228))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(titulo)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titulo)
+                    .addComponent(usuario))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -229,11 +238,28 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel titulo;
     private javax.swing.JLabel tituloMeusLances;
     private javax.swing.JLabel tituloUltimosLeiloes;
+    private javax.swing.JLabel usuario;
     // End of variables declaration//GEN-END:variables
     
-    public void addListaUltimosLeiloes(String s){
-        listaTodosLeiloes.addElement(s);
-        listaUltimosLeiloes.setModel(listaTodosLeiloes);
+    public void addListaUltimosLeiloes(){
+        listaTodosLeiloes.clear();
+        for(Produto p : processo.getLista_produtos()){
+            String s = "COD: "+ p.getCodigo()+" Produto: "+p.getNome()+" Desc.: "+p.getDescricao()+" R$: "+ p.getValor();
+            if(!p.getCodigo().substring(0, 4).equals(""+processo.getPorta_usuario())){
+                listaTodosLeiloes.addElement(s);
+                listaUltimosLeiloes.setModel(listaTodosLeiloes);
+            }
+        }
     }
-
+    
+    public void addListaMeusLeiloes(){
+        listaMLeiloes.clear();
+        for(Produto p : processo.getLista_produtos()){
+            String s = "COD: "+ p.getCodigo()+" Produto: "+p.getNome()+" Desc.: "+p.getDescricao()+" R$: "+ p.getValor();
+            if(p.getCodigo().substring(0, 4).equals(""+processo.getPorta_usuario())){
+                listaMLeiloes.addElement(s);
+                listaMeusLeiloes.setModel(listaMLeiloes);
+            }
+        }
+    }
 }
