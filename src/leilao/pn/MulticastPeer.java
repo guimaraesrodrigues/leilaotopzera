@@ -244,17 +244,16 @@ class PeerReceive extends Thread {
         
         int porta = Integer.parseInt(new String(Arrays.copyOfRange(m, p_nome+1, p_cod-1)));
         Produto novoP = new Produto();
-        
-        if(porta != this.processo.getPorta_usuario()){         
+            
+        if(porta != this.processo.getPorta_usuario()){
             novoP.setCodigo(new String(bcod));
             novoP.setNome(new String (bnome));
             novoP.setDescricao(new String(bdesc));
             novoP.setValor(Float.parseFloat(new String(bvalor)));
             novoP.setTempofinal(Float.parseFloat(new String(btime)));
-            this.processo.adicionaProdutoRecebido(novoP);            
-        }     
+            this.processo.adicionaProdutoRecebido(novoP);
+        }
         
-        //processo.AddLeilaoRecebido(novoP);
                
     }    
 }

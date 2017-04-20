@@ -15,7 +15,7 @@ public class Processo implements Serializable{
     private ArrayList<Processo> lista_usuarios;
     public MulticastPeer conexao_multi;
     private int contador_produtos;
-    public TelaPrincipal tp;   
+    public TelaPrincipal tp;
     
     public Processo() {
         this.contador_produtos = 0;
@@ -23,10 +23,6 @@ public class Processo implements Serializable{
     
     public void InstanciaTelaPrincial(){
         tp = new TelaPrincipal(this);
-    }
-    
-    public void AddLeilaoRecebido(Produto p){
-        tp.addListaUltimosLeiloes("COD: "+ p.getCodigo()+" Produto: "+p.getNome()+" Desc.: "+p.getDescricao()+" R$: "+ p.getValor());
     }
     
     public void adicionaUsuario(int porta, String nome, byte[]chave){
@@ -44,10 +40,11 @@ public class Processo implements Serializable{
         
     }
     
-    public void adicionaNovoProduto(Produto p){
+    public void adicionaNovoProduto(Produto prod){
         if(lista_produtos == null)
             lista_produtos = new ArrayList<Produto>();
-        lista_produtos.add(p);
+        lista_produtos.add(prod);
+        tp.addListaMeusLeiloes();
         contador_produtos++;        
     }
     
@@ -55,7 +52,8 @@ public class Processo implements Serializable{
         if(this.lista_produtos == null)                    
             this.lista_produtos = new ArrayList<Produto>();
         this.lista_produtos.add(prod);
-                 
+        //CHAMA FUNÇÃO EM TELA PRINCIPAL PARA ATUALIZAR A LISTA DE PRODUTOS
+        tp.addListaUltimosLeiloes();
     }  
     
     public byte[] lista_produtosToByte(){
