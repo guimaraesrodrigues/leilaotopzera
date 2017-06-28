@@ -3,7 +3,7 @@ package leilao;
 import java.io.Serializable;
 import java.util.ArrayList;
 import leilao.gui.TelaLance;
-import leilao.gui.TelaPrincipal;
+import leilao.gui.TelaPrincipal_old;
 import leilao.pn.MulticastPeer;
 import leilao.pn.UDPClient;
         
@@ -15,14 +15,14 @@ public class Processo implements Serializable{
     private ArrayList<Processo> lista_usuarios;
     public MulticastPeer conexao_multi;
     private int contador_produtos;
-    public TelaPrincipal tp;
+    public TelaPrincipal_old tp;
     
     public Processo() {
         this.contador_produtos = 0;
     }
     
     public void InstanciaTelaPrincial(){
-        tp = new TelaPrincipal(this);
+        tp = new TelaPrincipal_old(this);
     }
     
     public void adicionaUsuario(int porta, String nome, byte[]chave){

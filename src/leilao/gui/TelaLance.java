@@ -20,6 +20,8 @@ public class TelaLance extends javax.swing.JFrame {
     private String cod_produto;
     private float ult_lance;
     
+    public TelaLance(){}
+    
     public TelaLance(Processo processo, String cod_produto, String nome_produto, float ult_lance) {
         
         this.processo = processo;
