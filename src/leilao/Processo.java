@@ -19,11 +19,8 @@ public class Processo implements Serializable{
     
     public Processo() {
         this.contador_produtos = 0;
-    }
-    
-    public void InstanciaTelaPrincial(){
-        tp = new TelaPrincipal_old(this);
-    }
+        lista_produtos = new ArrayList<Produto>();
+    }   
     
     public void adicionaUsuario(int porta, String nome, byte[]chave){
         
@@ -44,7 +41,7 @@ public class Processo implements Serializable{
         if(lista_produtos == null)
             lista_produtos = new ArrayList<Produto>();
         lista_produtos.add(prod);
-        tp.addListaMeusLeiloes();
+        //tp.addListaMeusLeiloes();
         contador_produtos++;        
     }
     

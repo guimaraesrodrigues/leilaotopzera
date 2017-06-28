@@ -131,7 +131,7 @@ class PeerReceive extends Thread {
                     //mensagem_novoBD(message);
                 }
                 else if (message[0] == '1'){                    
-                    mensagem_novoProduto(message);
+                    mensagemNovoProduto(message);
                 }
             }
         } catch (IOException ex) {
@@ -181,11 +181,25 @@ class PeerReceive extends Thread {
             
             processo.adicionaUsuario(porta_novo_usuario, new String(nome), chave_pub);         
             //enviamos a lista de usuarios para o novo processo da rede
-            new UDPClient(processo.lista_usuariosTobyte(), "localhost", porta_novo_usuario);
-            if(!processo.getLista_produtos().isEmpty())
+            
+            byte[] lista_usuarios =  processo.lista_usuariosTobyte();
+            
+            int j = 0;
+            
+            while(j < 5000)
+                j++;                       
+            
+            new UDPClient(lista_usuarios, "localhost", porta_novo_usuario);
+            
+            if(!processo.getLista_produtos().isEmpty());
                 new UDPClient(processo.lista_produtosToByte(), "localhost", porta_novo_usuario);
             
         }
+    }
+    
+    private void mensagemNovoProduto(byte[] m){
+        String mensagem = new String(m);
+        System.out.println(""+m);
     }
     
     private void mensagem_novoProduto(byte[] m){

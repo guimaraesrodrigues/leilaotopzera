@@ -161,7 +161,7 @@ public class TelaLogin extends javax.swing.JFrame {
         processo.conexao_multi.enviaMensagem(mensagem_anuncio);
         
         //instanciamos essa tela principal e escondemos a tela de login para não perder o que foi instanciado       
-        processo.InstanciaTelaPrincial();
+        new TelaPrincipal(processo);
         this.setVisible(false);
     }//GEN-LAST:event_botaoOKActionPerformed
 

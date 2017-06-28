@@ -58,6 +58,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         statusLabel = new javax.swing.JLabel();
         buttonMeusLances = new javax.swing.JButton();
+        jButtonAtt = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,6 +151,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jButtonAtt.setText("Atualizar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -167,8 +170,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(tituloUltimosLeiloes)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButtonAtt, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(titulo)
                                         .addGap(49, 49, 49)))
                                 .addComponent(usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -202,15 +206,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jButtonSair)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(usuario))
+                        .addComponent(usuario)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
-                        .addComponent(titulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(titulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonAtt))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TituloMeusLeiloes)
@@ -273,6 +280,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         atualizaJtable();
         
         atualizaMeusLeiloes();
+        for(Processo p : processo.getLista_usuarios())            
+            System.out.println(""+p.getNome_usuario() + " "+p.getPorta_usuario());
     }//GEN-LAST:event_jButtonAtualizaActionPerformed
 
     private void jButtonLanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLanceActionPerformed
@@ -355,6 +364,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton botaoCancelarLeilao;
     private javax.swing.JButton botaoNovoProduto;
     private javax.swing.JButton buttonMeusLances;
+    private javax.swing.JButton jButtonAtt;
     private javax.swing.JButton jButtonAtualiza;
     private javax.swing.JButton jButtonLance;
     private javax.swing.JButton jButtonSair;
