@@ -348,14 +348,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
     //esse metodo atualiza os leiloes ativos
     private void atualizaJtable(){
         modeloTable.setRowCount(0);//limpamos a tabela 
-        /*try {
-            for(Leilao p : server.leiloes_ativos()){
-                if(p.getTempofinal() > 0)
-                    modeloTable.insertRow(modeloTable.getRowCount(), new Object[]{p.getCodigo(), p.getNome(), p.getDescricao(), p.getValor(), p.getTempofinal()});       
-            }
-        } catch (RemoteException ex) {
-            Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+       
+        //for(Leilao p : server.leiloes_ativos()){
+        //    if(p.getTempofinal() > 0)
+       //         modeloTable.insertRow(modeloTable.getRowCount(), new Object[]{p.getCodigo(), p.getNome(), p.getDescricao(), p.getValor(), p.getTempofinal()});       
+       // }
+       
        
     }
 

@@ -70,12 +70,19 @@ public class Processo implements Serializable{
         return lista_produtos;
     }
     
+    public String lista_produtosToString(){
+        String lista_produtos = new String();
+        
+        return lista_produtos;
+    }
+    
     /*Método que transforma o banco de dados em um vetor de bytes*/
     public byte[] lista_usuariosTobyte(){
         byte[] lista_usuarios = new byte[4096];
         int tamanho_lista = 0;
-                
+        
         for(Processo p : this.lista_usuarios){
+            //System.out.println("OI "+p.getPorta_usuario());
             String dados_processo = new String("~" + p.getPorta_usuario() + "|" + p.getNome_usuario()+ "|");
             byte[] chave_pub = new byte[p.getChave_publica().length+"|".getBytes().length];
             

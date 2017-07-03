@@ -38,7 +38,7 @@ public class MulticastPeer extends Thread {
             DatagramPacket messageOut;
             //socket.setTimeToLive(5);
             this.p = new PeerReceive(this.socket, this.processo); // Iniciando thread do receive (socket como parâmetro) ...
-            byte[] message = new byte[1000];
+            byte[] message = new byte[4096];
             
             
             /*TODO: Remover a entrada de dados pelo console */
@@ -112,26 +112,26 @@ class PeerReceive extends Thread {
             byte[] message;            
             while (true) { // Loop para ficar recebendo mensagens ...
 
-                byte[] buffer = new byte[1000];
+                byte[] buffer = new byte[4096];
                 DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length); 
                 
     
                 s.receive(messageIn);
-                message = messageIn.getData();                
+                buffer = messageIn.getData();                
                 
                 //impressao da mensagem apenas para debug
                 //for (int i = 0; i < message.length; i++)
                 //    System.out.print(message[i]);
                 
-                if (message[0] == '0') {
-                    mensagem_novoUser(message);
+                if (buffer[0] == '0') {
+                    mensagem_novoUser(buffer);
                 }
-                else if (message[0] == '~'){
+                else if (buffer[0] == '~'){
                     //sessao.limpaLista_usuarios();
                     //mensagem_novoBD(message);
                 }
-                else if (message[0] == '1'){                    
-                    mensagemNovoProduto(message);
+                else if (buffer[0] == '1'){                    
+                    mensagemNovoProduto(buffer);
                 }
             }
         } catch (IOException ex) {
@@ -182,13 +182,8 @@ class PeerReceive extends Thread {
             processo.adicionaUsuario(porta_novo_usuario, new String(nome), chave_pub);         
             //enviamos a lista de usuarios para o novo processo da rede
             
-            byte[] lista_usuarios =  processo.lista_usuariosTobyte();
-            
-            int j = 0;
-            
-            while(j < 5000)
-                j++;                       
-            
+            byte[] lista_usuarios =  processo.lista_usuariosTobyte();           
+                       
             new UDPClient(lista_usuarios, "localhost", porta_novo_usuario);
             
             if(!processo.getLista_produtos().isEmpty());
@@ -199,7 +194,8 @@ class PeerReceive extends Thread {
     
     private void mensagemNovoProduto(byte[] m){
         String mensagem = new String(m);
-        System.out.println(""+m);
+        for(String s : mensagem.split("\\|"))
+            System.out.println(""+s);
     }
     
     private void mensagem_novoProduto(byte[] m){

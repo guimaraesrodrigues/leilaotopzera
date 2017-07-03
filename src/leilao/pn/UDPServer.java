@@ -30,24 +30,26 @@ public class UDPServer extends Thread {
     public void run() {
         try {
             aSocket = new DatagramSocket(this.porta);//cria um socket com a porta recebida no construtor
-            byte[] buffer = new byte[4096];//buffer para armazenar as mensagens
+           //buffer para armazenar as mensagens
            // aSocket.setSoTimeout(1000);
             /*looping infinito para receber mensagens dos demais clientes*/
             boolean bd_new = true;
             while (true) {
+                byte[] buffer = new byte[4096];
                 DatagramPacket request = new DatagramPacket(buffer, buffer.length);
                 aSocket.receive(request);
                 DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(),
                         request.getAddress(), request.getPort());
                
-                byte[] message = new byte[4096];
-                message = request.getData();
-                if (message[0] == '~' && bd_new) {
+                //byte[] message = new byte[4096];
+                
+                
+                if (buffer[0] == '~' && bd_new) {
                     this.processo.limpaBD();
-                    separaNovoBD(message);
+                    separaNovoBD(buffer);
                     bd_new = false;
                 }
-                if (message[0] == '&') {
+                if (buffer[0] == '&') {
                     
                 }
                 aSocket.send(reply);
@@ -100,7 +102,7 @@ o método Processo.adicionaUsuário para a criação de novo usuário e inserç�
             p = Arrays.copyOfRange(m, j, posicao_porta+1);
             n = Arrays.copyOfRange(m, posicao_porta+2, posicao_nome+1);
             c = Arrays.copyOfRange(m, posicao_nome+2, posicao_chave+1);  
-     
+            
             processo.adicionaUsuario(new Integer(new String(p)),new String(n),c);
         }
     }
