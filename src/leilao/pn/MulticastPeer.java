@@ -109,7 +109,7 @@ class PeerReceive extends Thread {
     public void run() {
 
         try {
-            byte[] message;            
+                     
             while (true) { // Loop para ficar recebendo mensagens ...
 
                 byte[] buffer = new byte[4096];
@@ -186,16 +186,29 @@ class PeerReceive extends Thread {
                        
             new UDPClient(lista_usuarios, "localhost", porta_novo_usuario);
             
-            if(!processo.getLista_produtos().isEmpty());
+            if(!processo.getLista_produtos().isEmpty()){
+                
                 new UDPClient(processo.lista_produtosToByte(), "localhost", porta_novo_usuario);
+            }
+            
             
         }
     }
     
     private void mensagemNovoProduto(byte[] m){
-        String mensagem = new String(m);
-        for(String s : mensagem.split("\\|"))
-            System.out.println(""+s);
+                
+        String[] dados_produto = new String(m).split("\\|");
+        Produto novo_produto = new Produto();        
+        
+        if(Integer.parseInt(dados_produto[2].substring(0, 4)) != (processo.getPorta_usuario())){
+            novo_produto.setCodigo(dados_produto[2]);        
+            novo_produto.setNome(dados_produto[1]);          
+            novo_produto.setDescricao(dados_produto[3]);
+            novo_produto.setValor(Float.parseFloat(dados_produto[4]));
+            novo_produto.setTempofinal(Float.parseFloat(dados_produto[5]));
+        
+            processo.getLista_produtos().add(novo_produto); 
+        }       
     }
     
     private void mensagem_novoProduto(byte[] m){
@@ -253,17 +266,6 @@ class PeerReceive extends Thread {
         btime = Arrays.copyOfRange(m, p_valor+1, p_time);
         
         int porta = Integer.parseInt(new String(Arrays.copyOfRange(m, p_nome+1, p_cod-1)));
-        Produto novoP = new Produto();
-            
-        if(porta != this.processo.getPorta_usuario()){
-            novoP.setCodigo(new String(bcod));
-            novoP.setNome(new String (bnome));
-            novoP.setDescricao(new String(bdesc));
-            novoP.setValor(Float.parseFloat(new String(bvalor)));
-            novoP.setTempofinal(Float.parseFloat(new String(btime)));
-            this.processo.adicionaProdutoRecebido(novoP);
-        }
-        
-               
+        Produto novoP = new Produto();              
     }    
 }

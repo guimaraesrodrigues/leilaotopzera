@@ -58,7 +58,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         statusLabel = new javax.swing.JLabel();
         buttonMeusLances = new javax.swing.JButton();
-        jButtonAtt = new javax.swing.JButton();
+        buttonAtualiz = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -151,7 +151,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jButtonAtt.setText("Atualizar");
+        buttonAtualiz.setText("Atualizar");
+        buttonAtualiz.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAtualizActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -171,7 +176,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                         .addComponent(tituloUltimosLeiloes)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButtonAtt, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(buttonAtualiz, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(titulo)
                                         .addGap(49, 49, 49)))
@@ -217,7 +222,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(titulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonAtt))))
+                            .addComponent(buttonAtualiz))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TituloMeusLeiloes)
@@ -277,11 +282,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jButtonAtualizaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAtualizaActionPerformed
         //novo metodo para preencher jtable
-        atualizaJtable();
+        atualizaJtableLeiloes();
         
-        atualizaMeusLeiloes();
-        for(Processo p : processo.getLista_usuarios())            
-            System.out.println(""+p.getNome_usuario() + " "+p.getPorta_usuario());
+        
     }//GEN-LAST:event_jButtonAtualizaActionPerformed
 
     private void jButtonLanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLanceActionPerformed
@@ -301,7 +304,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         //String msg_retorno = server.registarLance("" + modeloTable.getValueAt(jTableLeiloes.getSelectedRow(), 0), valor_lance, this.client);
         //this.statusLabel.setText(msg_retorno);          
         
-        this.atualizaJtable();             
+        this.atualizaJtableLeiloes();             
         
     }//GEN-LAST:event_jButtonLanceActionPerformed
 
@@ -330,6 +333,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
             this.statusLabel.setText("Selecione um produto primeiro!");
     }//GEN-LAST:event_buttonMeusLancesActionPerformed
 
+    private void buttonAtualizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAtualizActionPerformed
+        for(Processo p : processo.getLista_usuarios())
+            System.out.println("" + p.getPorta_usuario() + " " + p.getNome_usuario());
+    }//GEN-LAST:event_buttonAtualizActionPerformed
+
     /*TODO: Reescrever esse método para atualizar meus leiloes*/
     public void atualizaMeusLeiloes(){
         modelListaLeiloes.clear();
@@ -346,12 +354,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
     
     //esse metodo atualiza os leiloes ativos
-    private void atualizaJtable(){
+    private void atualizaJtableLeiloes(){
         modeloTable.setRowCount(0);//limpamos a tabela 
-       
+        for (Produto p : processo.getLista_produtos()){
+            modeloTable.insertRow(modeloTable.getRowCount(), new Object[]{p.getCodigo(), p.getNome(), p.getDescricao(), p.getValor(), p.getTempofinal()});
+        }
         //for(Leilao p : server.leiloes_ativos()){
         //    if(p.getTempofinal() > 0)
-       //         modeloTable.insertRow(modeloTable.getRowCount(), new Object[]{p.getCodigo(), p.getNome(), p.getDescricao(), p.getValor(), p.getTempofinal()});       
+       //         modeloTable.insertRow(modeloTable.getRowCount(), new Object[]{});       
        // }
        
        
@@ -361,8 +371,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel TituloMeusLeiloes;
     private javax.swing.JButton botaoCancelarLeilao;
     private javax.swing.JButton botaoNovoProduto;
+    private javax.swing.JButton buttonAtualiz;
     private javax.swing.JButton buttonMeusLances;
-    private javax.swing.JButton jButtonAtt;
     private javax.swing.JButton jButtonAtualiza;
     private javax.swing.JButton jButtonLance;
     private javax.swing.JButton jButtonSair;

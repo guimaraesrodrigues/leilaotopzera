@@ -182,7 +182,7 @@ public class NovoProduto extends javax.swing.JFrame {
         
         processo.adicionaNovoProduto(novo_produto);
         
-        String dados_produto = new String("1"+novo_produto.getNome()+"|"+novo_produto.getCodigo()+"|"+novo_produto.getDescricao()+"|"+novo_produto.getValor()+"|"+novo_produto.getTempofinal()+"|");
+        String dados_produto = new String("1"+"|"+novo_produto.getNome()+"|"+novo_produto.getCodigo()+"|"+novo_produto.getDescricao()+"|"+novo_produto.getValor()+"|"+novo_produto.getTempofinal()+"|");
         processo.conexao_multi.enviaMensagem(dados_produto.getBytes());
         
         descricao.setText("");

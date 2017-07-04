@@ -3,7 +3,6 @@ package leilao;
 import java.io.Serializable;
 import java.util.ArrayList;
 import leilao.gui.TelaLance;
-import leilao.gui.TelaPrincipal_old;
 import leilao.pn.MulticastPeer;
 import leilao.pn.UDPClient;
         
@@ -15,7 +14,6 @@ public class Processo implements Serializable{
     private ArrayList<Processo> lista_usuarios;
     public MulticastPeer conexao_multi;
     private int contador_produtos;
-    public TelaPrincipal_old tp;
     
     public Processo() {
         this.contador_produtos = 0;
@@ -44,17 +42,8 @@ public class Processo implements Serializable{
         //tp.addListaMeusLeiloes();
         contador_produtos++;        
     }
-    
-    public void adicionaProdutoRecebido(Produto prod){              
-        if(this.lista_produtos == null)                    
-            this.lista_produtos = new ArrayList<Produto>();
-        this.lista_produtos.add(prod);
-        //CHAMA FUNÇÃO EM TELA PRINCIPAL PARA ATUALIZAR A LISTA DE PRODUTOS
-        tp.addListaUltimosLeiloes();
-    }  
-    
-    public byte[] lista_produtosToByte(){
-        byte[] lista_produtos = new byte[4096];
+       
+    public byte[] lista_produtosToByte(){       
                 
          String dados_produtos = new String();
          
@@ -64,10 +53,7 @@ public class Processo implements Serializable{
                     +p.getDescricao()+"|"+p.getValor()+"|"+p.getTempofinal()));                 
         }                
         
-        dados_produtos = dados_produtos.concat("|");
-        
-        System.out.println(""+dados_produtos);
-        return lista_produtos;
+        return dados_produtos.getBytes();
     }
     
     public String lista_produtosToString(){
@@ -143,7 +129,7 @@ public class Processo implements Serializable{
     }
     
     public void limpaBD(){
-        this.lista_usuarios = null;
+        this.lista_usuarios = new ArrayList<Processo>();
     }
     
     public int getContador_produtos() {

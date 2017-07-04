@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+import leilao.Produto;
 
 /**
  * Classe que cria um servidor UDP. Herda de Thread pois é um servidor que fica
@@ -40,9 +41,6 @@ public class UDPServer extends Thread {
                 aSocket.receive(request);
                 DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(),
                         request.getAddress(), request.getPort());
-               
-                //byte[] message = new byte[4096];
-                
                 
                 if (buffer[0] == '~' && bd_new) {
                     this.processo.limpaBD();
@@ -50,7 +48,7 @@ public class UDPServer extends Thread {
                     bd_new = false;
                 }
                 if (buffer[0] == '&') {
-                    
+                    separaListaProdutos(buffer);
                 }
                 aSocket.send(reply);
             }
@@ -104,6 +102,31 @@ o método Processo.adicionaUsuário para a criação de novo usuário e inserç�
             c = Arrays.copyOfRange(m, posicao_nome+2, posicao_chave+1);  
             
             processo.adicionaUsuario(new Integer(new String(p)),new String(n),c);
+        }
+    }
+    
+    public void separaListaProdutos(byte[] m){
+        String mensagem = new String(m);
+        StringTokenizer st = new StringTokenizer(mensagem, "&");
+        
+        String[] lista_dados;        
+        String s = new String();
+        Produto novo_produto = new Produto();
+                
+        while (st.hasMoreElements()) {
+            s = st.nextToken();            
+            lista_dados = s.split("\\|");
+            novo_produto.setNome(lista_dados[0]);
+            novo_produto.setCodigo(lista_dados[1]);
+            novo_produto.setDescricao(lista_dados[2]);
+            novo_produto.setValor(Float.parseFloat(lista_dados[3]));
+            novo_produto.setTempofinal(Float.parseFloat(lista_dados[4]));
+            
+            for(Produto p :processo.getLista_produtos() )
+                if(p.getCodigo() == novo_produto.getCodigo())
+                   return;                                    
+                else
+                    processo.getLista_produtos().add(novo_produto);
         }
     }
 
