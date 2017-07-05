@@ -180,8 +180,9 @@ public class NovoProduto extends javax.swing.JFrame {
         novo_produto.setCodigo(""+processo.getPorta_usuario()+""+processo.getContador_produtos());
         novo_produto.setAtivo(true);
         
-        processo.adicionaNovoProduto(novo_produto);
+        processo.adicionaNovoProduto(novo_produto);//adicionamos o produto na lista de produtos do processo atual
         
+        ///e enviamos o novo produto para toda a rede via multicast
         String dados_produto = new String("1"+"|"+novo_produto.getNome()+"|"+novo_produto.getCodigo()+"|"+novo_produto.getDescricao()+"|"+novo_produto.getValor()+"|"+novo_produto.getTempofinal()+"|");
         processo.conexao_multi.enviaMensagem(dados_produto.getBytes());
         

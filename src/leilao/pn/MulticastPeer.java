@@ -139,7 +139,7 @@ class PeerReceive extends Thread {
         }
     }
     
-    
+    /*Método para tratar uma mensagem de novo usuario recebido por multicast*/
     private void mensagem_novoUser(byte[] m) {
                 
         int posicao_nome = 0, posicao_porta = 0, posicao_chave = 0;
@@ -176,16 +176,17 @@ class PeerReceive extends Thread {
         
                 
         int porta_novo_usuario = new Integer(new String(porta));
-                
+        
+        //Se o novo usuario recebido via multicast nao eh ele mesmo, enviamos as infos do estado atual do sistema        
         if (porta_novo_usuario != this.processo.getPorta_usuario()) {
             
             processo.adicionaUsuario(porta_novo_usuario, new String(nome), chave_pub);         
-            //enviamos a lista de usuarios para o novo processo da rede
             
-            byte[] lista_usuarios =  processo.lista_usuariosTobyte();           
-                       
+            //enviamos a lista de usuarios para o novo processo da rede            
+            byte[] lista_usuarios =  processo.lista_usuariosTobyte();       
             new UDPClient(lista_usuarios, "localhost", porta_novo_usuario);
             
+            //se a lista de usuarios nao esta vazia, enviamos ela para o novo processo da rede
             if(!processo.getLista_produtos().isEmpty()){
                 
                 new UDPClient(processo.lista_produtosToByte(), "localhost", porta_novo_usuario);

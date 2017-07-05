@@ -100,19 +100,19 @@ o método Processo.adicionaUsuário para a criação de novo usuário e inserç�
             p = Arrays.copyOfRange(m, j, posicao_porta+1);
             n = Arrays.copyOfRange(m, posicao_porta+2, posicao_nome+1);
             c = Arrays.copyOfRange(m, posicao_nome+2, posicao_chave+1);  
-            
+            ///adicionamos na lista de processos o novo usuario recebido
             processo.adicionaUsuario(new Integer(new String(p)),new String(n),c);
         }
     }
-    
+    /* metodo para tratar a mensagem com lista de produtos  */
     public void separaListaProdutos(byte[] m){
         String mensagem = new String(m);
-        StringTokenizer st = new StringTokenizer(mensagem, "&");
+        StringTokenizer st = new StringTokenizer(mensagem, "&");//esse objeto armazena uma coleção de vetor de strings
         
         String[] lista_dados;        
         String s = new String();
         Produto novo_produto = new Produto();
-                
+         //cada vetor de string representa um produto     
         while (st.hasMoreElements()) {
             s = st.nextToken();            
             lista_dados = s.split("\\|");

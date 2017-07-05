@@ -261,17 +261,30 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSairActionPerformed
         
-        Object item;
-        if(this.listaMeusLeiloes.getSelectedValue() != null){            
-          
-            int size = listaMeusLeiloes.getModel().getSize(); 
-            // Get all item objects
-            for (int i = 0; i < size; i++){
-                item = listaMeusLeiloes.getModel().getElementAt(i);
-                //server.cancelarLeilao(new String(item.toString().substring(0, 5)));
+        int i = 0;
+        for (i = 0; i < processo.getLista_usuarios().size(); i++){
+            if(processo.getPorta_usuario() == processo.getLista_usuarios().get(i).getPorta_usuario() ){
+                 break;
             }
-            
-        }        
+        }
+        processo.getLista_usuarios().remove(i);
+        
+        processo.conexao_multi.enviaMensagem(processo.lista_usuariosTobyte());
+        
+        for (i = 0 ; i < processo.getLista_produtos().size(); i++  ){
+            //System.out.println(""+prod.getCodigo().substring(0, 4));
+            int porta_prod = Integer.parseInt(processo.getLista_produtos().get(i).getCodigo().substring(0, 4));
+            if(processo.getPorta_usuario() ==  porta_prod){
+                break;
+            }
+        }
+        
+        if (!processo.getLista_produtos().isEmpty()){
+            processo.getLista_produtos().remove(i);        
+            processo.conexao_multi.enviaMensagem(processo.lista_produtosToByte());
+        }
+        
+        
         System.exit(0);        
     }//GEN-LAST:event_jButtonSairActionPerformed
 

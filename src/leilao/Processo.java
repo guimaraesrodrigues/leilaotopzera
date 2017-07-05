@@ -19,7 +19,7 @@ public class Processo implements Serializable{
         this.contador_produtos = 0;
         lista_produtos = new ArrayList<Produto>();
     }   
-    
+    /* Adiciona um novo usuario na lista de usuarios */
     public void adicionaUsuario(int porta, String nome, byte[]chave){
         
         if(lista_usuarios == null)
@@ -34,7 +34,7 @@ public class Processo implements Serializable{
         this.lista_usuarios.add(novo_usuario);       
         
     }
-    
+    //adiciona um novo produto na lista de produtos
     public void adicionaNovoProduto(Produto prod){
         if(lista_produtos == null)
             lista_produtos = new ArrayList<Produto>();
@@ -42,18 +42,18 @@ public class Processo implements Serializable{
         //tp.addListaMeusLeiloes();
         contador_produtos++;        
     }
-       
+       //transforma a lista de produtos em um vetor de bytes para ser enviado pela rede
     public byte[] lista_produtosToByte(){       
                 
          String dados_produtos = new String();
-         
+         //concatenamos todos os dados na string dados_produtos
         for(Produto p : this.lista_produtos){
             
             dados_produtos = dados_produtos.concat(new String("&" +p.getNome()+"|"+p.getCodigo()+"|"
                     +p.getDescricao()+"|"+p.getValor()+"|"+p.getTempofinal()));                 
         }                
         
-        return dados_produtos.getBytes();
+        return dados_produtos.getBytes();//retornamos a string em formato de vetor de bytes
     }
     
     public String lista_produtosToString(){
